@@ -769,7 +769,43 @@ class Woocommerce_Conditional_Product_Fees_For_Checkout_Pro_Public {
 											}
 										} else {
 											/** @var add the total fee value $total_fee */
-											if ( ( ! empty( $chk_enable_custom_fun ) && 'on' === $chk_enable_custom_fun ) ) {
+    										if ( ( ! empty( $chk_enable_custom_fun ) && 'on' === $chk_enable_custom_fun ) ) {
+    											
+    											$merge_fee_flag = apply_filters('merge_fee_flag',true, $fees_id);
+    											if(true == $merge_fee_flag){
+    												$total_fee = $total_fee + $fees_cost;
+    											} else {
+    												$package->fees_api()->add_fee(
+    													array(
+    														'id'         => $fees_id,
+    														'name'       => $title,
+    														'amount'     => $fees_cost,
+    														'taxable'    => $texable,
+    														'tax_class'  => '',
+    														'menu_order' => $fees->menu_order,
+    													)
+    												);
+    											}
+    											
+    										} else {
+    											$package->fees_api()->add_fee(
+    												array(
+    													'id'         => $fees_id,
+    													'name'       => $title,
+    													'amount'     => $fees_cost,
+    													'taxable'    => $texable,
+    													'tax_class'  => '',
+    													'menu_order' => $fees->menu_order,
+    												)
+    											);
+    										}
+										}
+									} else {
+										/** @var add the total fee value $total_fee */
+										if ( ( ! empty( $chk_enable_custom_fun ) && 'on' === $chk_enable_custom_fun ) ) {
+											
+											$merge_fee_flag = apply_filters('merge_fee_flag',true, $fees_id);
+											if(true == $merge_fee_flag){
 												$total_fee = $total_fee + $fees_cost;
 											} else {
 												$package->fees_api()->add_fee(
@@ -783,11 +819,7 @@ class Woocommerce_Conditional_Product_Fees_For_Checkout_Pro_Public {
 													)
 												);
 											}
-										}
-									} else {
-										/** @var add the total fee value $total_fee */
-										if ( ( ! empty( $chk_enable_custom_fun ) && 'on' === $chk_enable_custom_fun ) ) {
-											$total_fee = $total_fee + $fees_cost;
+											
 										} else {
 											$package->fees_api()->add_fee(
 												array(
